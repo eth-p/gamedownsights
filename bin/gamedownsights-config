@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Homepage: https://github.com/eth-p/gamedownsights
+
+#shellcheck shell=bash
+#shellcheck disable=SC2016 # yq query variables trigger false positive
+set -euo pipefail
+
+#shellcheck source=../lib.sh
+source "$(dirname -- "$(realpath -- "$0")")/../lib.sh"
+
+subcmd_print() {
+    echo "Detecting display configuration..." 1>&2
+    detect_display_configuration 1>&2 || true
+    
+    printf "Detected using:\n" 1>&2
+    printf " * %s\n" "${DISPLAY_DETECTED_USING[@]}" 1>&2
+    printf "==========\n" 1>&2
+
+    if [[ -z "$DISPLAY_PORT" ]]; then
+        DISPLAY_PORT="(unknown)"
+    fi
+
+    printf "%s=%s\n" \
+        "DISPLAY_PORT" "$DISPLAY_PORT" \
+        "DISPLAY_WIDTH" "$DISPLAY_WIDTH" \
+        "DISPLAY_HEIGHT" "$DISPLAY_HEIGHT" \
+        "DISPLAY_REFRESH_RATE" "$DISPLAY_REFRESH_RATE" \
+        "DISPLAY_USE_VRR" "$DISPLAY_USE_VRR" \
+        "DISPLAY_USE_HDR" "$DISPLAY_USE_HDR" \
+        "DISPLAY_ITM_NITS" "$DISPLAY_ITM_NITS" \
+        "DISPLAYSERVER_PROTOCOL" "$DISPLAYSERVER_PROTOCOL"
+
+    printf "==========\n" 1>&2
+}
+
+subcmd_print_launchcmd() {
+    echo "Detecting display configuration..." 1>&2
+    detect_display_configuration 1>&2 || true
+    
+    printf "Detected using:\n" 1>&2
+    printf " * %s\n" "${DISPLAY_DETECTED_USING[@]}" 1>&2
+    printf "==========\n" 1>&2
+
+    generate_gamescope_command "%command%"
+
+    printf "==========\n" 1>&2
+}
+
+subcmd_help() {
+    prog="$(basename -- "$0")"
+    printf "%s [subcommand]\n" "$prog"
+    printf "\n"
+    printf "SUBCOMMANDS:\n"
+    printf "    print             -- print the detected configuration\n"
+    printf "    print-launchcmd   -- print the command for launching gamescope\n"
+}
+
+# ----------------------------------------------------------------------------
+# Main:
+# ----------------------------------------------------------------------------
+
+if [[ "$#" -eq 0 ]]; then
+    set -- help
+fi
+
+subcmd="$1"
+shift
+
+case "$subcmd" in
+help) subcmd_help "$@" ;;
+print) subcmd_print "$@" ;;
+print-launchcmd) subcmd_print_launchcmd "$@" ;;
+*) warn "Unknown subcommand: %s" "$subcmd" && exit 1 ;;
+esac

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Homepage: https://github.com/eth-p/gamedownsights
+
+#shellcheck shell=bash
+set -euo pipefail
+source "$(dirname -- "$(realpath -- "$0")")/../lib.sh"
+
+detect_display_configuration || true
+eval "exec $(generate_gamescope_command "$@")"

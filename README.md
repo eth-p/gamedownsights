@@ -10,7 +10,11 @@ on for your display settings.
 
 ## Installation
 
-TODO
+### With Nix
+
+```
+nix profile install github:eth-p/gamedownsights
+```
 
 ## Usage
 

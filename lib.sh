@@ -157,7 +157,7 @@ load_display_configuration_overrides() {
 generate_gamescope_command() {
     local gamescope_env gamescope_args
 
-    gamescope_env=()
+    env_vars=()
     gamescope_args=(
         --fullscreen
         -w "$DISPLAY_WIDTH" -W "$DISPLAY_WIDTH"
@@ -169,11 +169,21 @@ generate_gamescope_command() {
 
     if [[ "$DISPLAY_USE_HDR" = "true" ]]; then
         gamescope_args+=(--hdr-enabled)
-        gamescope_env+=(
-            ENABLE_GAMESCOPE_WSI=1
+        env_vars+=(
             ENABLE_HDR_WSI=1
             DXVK_HDR=1
         )
+
+        if [[ "$ENABLE_GAMESCOPE" = "true" ]]; then
+            env_vars+=(
+                ENABLE_GAMESCOPE_WSI=1
+            )
+        else
+            env_vars+=(
+                PROTON_ENABLE_WAYLAND=1
+                PROTON_ENABLE_HDR=1
+            ) 
+        fi
 
         # Enable inverse tone mapping.
         if [[ "$DISPLAY_ITM_NITS" != "0" ]]; then
@@ -201,9 +211,9 @@ generate_gamescope_command() {
 
     # Reset LD_PRELOAD.
     # https://github.com/ValveSoftware/gamescope/issues/163
-    if [[ "$ENABLE_STEAM_LDPRELOAD_WORKAROUND" = "true" ]]; then
+    if [[ "$ENABLE_STEAM_LDPRELOAD_WORKAROUND" = "true" && "$ENABLE_GAMESCOPE" = "true" ]]; then
         printf "env LD_PRELOAD='' "
-        gamescope_env+=("LD_PRELOAD=${LD_PRELOAD:-}")
+        env_vars+=("LD_PRELOAD=${LD_PRELOAD:-}")
     fi
 
     # GameMode.
@@ -212,12 +222,14 @@ generate_gamescope_command() {
     fi
 
     # Gamescope.
-    printf "%q " gamescope "${gamescope_args[@]}" --
+    if [[ "$ENABLE_GAMESCOPE" = true ]]; then
+        printf "%q " gamescope "${gamescope_args[@]}" --
+    fi
 
     # Environment variables.
-    if [[ "${#gamescope_env[@]}" -gt 0 ]]; then
+    if [[ "${#env_vars[@]}" -gt 0 ]]; then
         printf "env "
-        printf "%q " "${gamescope_env[@]}"
+        printf "%q " "${env_vars[@]}"
     fi
 
     # Launch command.

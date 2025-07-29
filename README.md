@@ -56,4 +56,5 @@ DISPLAYSERVER_PROTOCOL=x11    # currently does not have any effect
 GAMESCOPE_EXTRA_ARGS=()
 ENABLE_GAMEMODE=false
 ENABLE_GAMESCOPE=true
+ENABLE_MANGOHUD=true
 ```

@@ -35,6 +35,7 @@ subcmd_print() {
 
     printf "%s=%s\n" \
         "ENABLE_GAMEMODE" "$ENABLE_GAMEMODE" \
+        "ENABLE_MANGOHUD" "$ENABLE_MANGOHUD" \
         "ENABLE_STEAM_LDPRELOAD_WORKAROUND" "$ENABLE_STEAM_LDPRELOAD_WORKAROUND"
 
     printf "==========\n" 1>&2

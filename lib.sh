@@ -59,6 +59,8 @@ default_display_configuration() {
     )
 
     ENABLE_STEAM_LDPRELOAD_WORKAROUND=true
+    ENABLE_GAMESCOPE=true
+    ENABLE_MANGOHUD=false
     ENABLE_GAMEMODE=false
     if command -v gamemoderun &>/dev/null; then
         ENABLE_GAMEMODE=true
@@ -219,6 +221,15 @@ generate_gamescope_command() {
     # GameMode.
     if [[ "$ENABLE_GAMEMODE" = true ]]; then
         printf "gamemoderun "
+    fi
+
+    # MangoHud.
+    if [[ "$ENABLE_MANGOHUD" = true ]]; then
+        if [[ "$ENABLE_GAMESCOPE" = true ]]; then
+            gamescope_args+=(--mangoapp)
+        else
+            printf "%q " mangohud
+        fi
     fi
 
     # Gamescope.

@@ -31,6 +31,12 @@ subcmd_print() {
         "DISPLAYSERVER_PROTOCOL" "$DISPLAYSERVER_PROTOCOL"
 
     printf "==========\n" 1>&2
+    printf "Other settings:\n" 1>&2
+
+    printf "%s=%s\n" \
+        "ENABLE_GAMEMODE" "$ENABLE_GAMEMODE" \
+
+    printf "==========\n" 1>&2
 }
 
 subcmd_print_launchcmd() {

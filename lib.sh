@@ -57,6 +57,11 @@ default_display_configuration() {
         DISPLAY_ITM_NITS
         DISPLAYSERVER_PROTOCOL
     )
+
+    ENABLE_GAMEMODE=false
+    if command -v gamemoderun &>/dev/null; then
+        ENABLE_GAMEMODE=true
+    fi
 }
 
 # default_display_configuration sets the detected display configuration
@@ -146,7 +151,7 @@ load_display_configuration_overrides() {
 generate_gamescope_command() {
     local gamescope_env gamescope_args
 
-    gamescope_env=(PLACEHOLDER_ENV_VAR=true)
+    gamescope_env=()
     gamescope_args=(
         --fullscreen
         -w "$DISPLAY_WIDTH" -W "$DISPLAY_WIDTH"
@@ -188,9 +193,24 @@ generate_gamescope_command() {
         gamescope_args+=("$arg")
     done
 
-    printf "%q " \
-        gamescope "${gamescope_args[@]}" -- \
-        env "${gamescope_env[@]}" "$@"
+    # GameMode.
+    if [[ "$ENABLE_GAMEMODE" = true ]]; then
+        printf "gamemoderun "
+    fi
+
+    # Gamescope.
+    printf "%q " gamescope "${gamescope_args[@]}" --
+
+    # Environment variables.
+    if [[ "${#gamescope_env[@]}" -gt 0 ]]; then
+        printf "env "
+        printf "%q " "${gamescope_env[@]}"
+    fi
+
+    # Launch command.
+    if [[ "$#" -gt 0 ]]; then
+        printf "%q " "$@"
+    fi
 
     printf "\n"
 }

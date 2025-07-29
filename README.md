@@ -54,4 +54,5 @@ DISPLAY_USE_HDR=false
 DISPLAY_ITM_NITS=300          # set to 0 to disable
 DISPLAYSERVER_PROTOCOL=x11    # currently does not have any effect
 GAMESCOPE_EXTRA_ARGS=()
+ENABLE_GAMEMODE=false
 ```

@@ -6,7 +6,7 @@
 set -euo pipefail
 
 #shellcheck source=../lib.sh
-source "$(dirname -- "$(realpath -- "$0")")/../lib.sh"
+source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/../lib.sh"
 
 subcmd_print() {
     echo "Detecting display configuration..." 1>&2

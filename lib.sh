@@ -58,6 +58,7 @@ default_display_configuration() {
         DISPLAYSERVER_PROTOCOL
     )
 
+    ENABLE_STEAM_LDPRELOAD_WORKAROUND=true
     ENABLE_GAMEMODE=false
     if command -v gamemoderun &>/dev/null; then
         ENABLE_GAMEMODE=true
@@ -192,6 +193,13 @@ generate_gamescope_command() {
     for arg in "${GAMESCOPE_EXTRA_ARGS[@]}"; do
         gamescope_args+=("$arg")
     done
+
+    # Reset LD_PRELOAD.
+    # https://github.com/ValveSoftware/gamescope/issues/163
+    if [[ "$ENABLE_STEAM_LDPRELOAD_WORKAROUND" = "true" ]]; then
+        printf "env LD_PRELOAD='' "
+        gamescope_env+=("LD_PRELOAD=${LD_PRELOAD:-}")
+    fi
 
     # GameMode.
     if [[ "$ENABLE_GAMEMODE" = true ]]; then

@@ -139,6 +139,11 @@ detect_display_configuration() {
 }
 
 load_display_configuration_overrides() {
+    # Load built-in overrides.
+    # shellcheck source=./game-overrides.sh
+    source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/game-overrides.sh"
+
+    # Load user-specified overrides.
     local configdir="${XDG_CONFIG_HOME:-$HOME/.config}/gamedownsights"
 
     if [[ -f "${configdir}/override.sh" ]]; then

@@ -172,7 +172,6 @@ generate_gamescope_command() {
     if [[ "$DISPLAY_USE_HDR" = "true" ]]; then
         gamescope_args+=(--hdr-enabled)
         env_vars+=(
-            ENABLE_HDR_WSI=1
             DXVK_HDR=1
         )
 
@@ -182,6 +181,7 @@ generate_gamescope_command() {
             )
         else
             env_vars+=(
+                ENABLE_HDR_WSI=1
                 PROTON_ENABLE_WAYLAND=1
                 PROTON_ENABLE_HDR=1
             ) 

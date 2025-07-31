@@ -12,4 +12,10 @@ case "${SteamAppId:-}" in
 	ENABLE_GAMEMODE=false  # causes crash
 	;;
 
+# Ori and the Will of the Wisps
+# Tested: 2025-07-30
+1057090)
+	ENABLE_GAMEMODE=false  # causes crash before Xbox Studios screen
+	;;
+
 esac

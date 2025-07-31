@@ -33,6 +33,21 @@ warn() {
     fi
 }
 
+# join uses the first argument as a delimiter to join the remaining arguments.
+join() {
+    local delim="$1"
+    shift
+
+    if [[ "$#" -gt 0 ]]; then
+        printf "%s" "$1"
+        shift
+    fi
+
+    if [[ "$#" -gt 0 ]]; then
+        printf "${delim}%s" "$@"
+    fi
+}
+
 # default_display_configuration sets the detected display configuration
 # parameters to their default values.
 #
@@ -157,9 +172,10 @@ load_display_configuration_overrides() {
 }
 
 generate_gamescope_command() {
-    local gamescope_env gamescope_args
+    local env_vars env_ldpreload gamescope_args
 
     env_vars=()
+    env_ldpreload=()
     gamescope_args=(
         --fullscreen
         -w "$DISPLAY_WIDTH" -W "$DISPLAY_WIDTH"
@@ -169,6 +185,15 @@ generate_gamescope_command() {
         --scaler integer
     )
 
+    # Read LD_PRELOAD items.
+    local item
+    while read -r -d':' item; do
+        if [[ -n "$item" ]]; then
+            env_ldpreload+=("$item")
+        fi
+    done <<< "${LD_PRELOAD:-}:"
+
+    # Enable HDR.
     if [[ "$DISPLAY_USE_HDR" = "true" ]]; then
         gamescope_args+=(--hdr-enabled)
         env_vars+=(
@@ -215,12 +240,12 @@ generate_gamescope_command() {
     # https://github.com/ValveSoftware/gamescope/issues/163
     if [[ "$ENABLE_STEAM_LDPRELOAD_WORKAROUND" = "true" && "$ENABLE_GAMESCOPE" = "true" ]]; then
         printf "env LD_PRELOAD='' "
-        env_vars+=("LD_PRELOAD=${LD_PRELOAD:-}")
     fi
 
     # GameMode.
     if [[ "$ENABLE_GAMEMODE" = true ]]; then
         printf "gamemoderun "
+        env_ldpreload+=("libgamemodeauto.so.0")
     fi
 
     # MangoHud.
@@ -238,6 +263,10 @@ generate_gamescope_command() {
     fi
 
     # Environment variables.
+    if [[ "${#env_ldpreload[@]}" -gt 0 ]]; then
+        env_vars+=("LD_PRELOAD=$(join ":" "${env_ldpreload[@]}")")
+    fi
+
     if [[ "${#env_vars[@]}" -gt 0 ]]; then
         printf "env "
         printf "%q " "${env_vars[@]}"

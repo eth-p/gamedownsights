@@ -289,6 +289,14 @@ if [[
     "${XDG_CURRENT_DESKTOP:-}" = "KDE" &&
     "${KDE_SESSION_VERSION:-}" = "6" ]]; then
     source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-plasma6.sh"
+# Hyprland
+elif [[
+      "${XDG_CURRENT_DESKTOP:-}" = "Hyprland" ]]; then
+      source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-hyprland.sh"
+else
+    # Fallback: xrandr
+    # Does not detect VRR, HDR.
+    source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-xrandr.sh"
 fi
 
 # Fallback: xrandr

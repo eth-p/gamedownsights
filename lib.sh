@@ -298,7 +298,3 @@ else
     # Does not detect VRR, HDR.
     source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-xrandr.sh"
 fi
-
-# Fallback: xrandr
-# Does not detect VRR, HDR.
-source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-xrandr.sh"

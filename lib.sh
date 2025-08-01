@@ -291,8 +291,8 @@ if [[
     source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-plasma6.sh"
 # Hyprland
 elif [[
-      "${XDG_CURRENT_DESKTOP:-}" = "Hyprland" ]]; then
-      source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-hyprland.sh"
+    "${XDG_CURRENT_DESKTOP:-}" = "Hyprland" ]]; then
+    source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/detect-hyprland.sh"
 else
     # Fallback: xrandr
     # Does not detect VRR, HDR.

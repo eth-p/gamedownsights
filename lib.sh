@@ -62,6 +62,7 @@ default_display_configuration() {
     DISPLAY_ITM_NITS=300
     DISPLAYSERVER_PROTOCOL=x11
     GAMESCOPE_EXTRA_ARGS=()
+    EXTRA_ENV_VARS=()
     __DISPLAY_CONFIGURATION_VARS=(
         DISPLAY_PORT
         DISPLAY_WIDTH
@@ -265,6 +266,10 @@ generate_gamescope_command() {
     # Environment variables.
     if [[ "${#env_ldpreload[@]}" -gt 0 ]]; then
         env_vars+=("LD_PRELOAD=$(join ":" "${env_ldpreload[@]}")")
+    fi
+
+    if [[ "${#EXTRA_ENV_VARS[@]}" -gt 0 ]]; then
+        env_vars+=("${EXTRA_ENV_VARS[@]}")
     fi
 
     if [[ "${#env_vars[@]}" -gt 0 ]]; then

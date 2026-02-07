@@ -191,7 +191,7 @@ generate_gamescope_command() {
         if [[ -n "$item" ]]; then
             env_ldpreload+=("$item")
         fi
-    done <<< "${LD_PRELOAD:-}:"
+    done <<<"${ORIGINAL_LD_PRELOAD:-}:"
 
     # Enable HDR.
     if [[ "$DISPLAY_USE_HDR" = "true" ]]; then

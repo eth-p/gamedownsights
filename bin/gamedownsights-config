@@ -5,6 +5,10 @@
 #shellcheck disable=SC2016 # yq query variables trigger false positive
 set -euo pipefail
 
+# Unset LD_PRELOAD until ready to start the game.
+ORIGINAL_LD_PRELOAD="${LD_PRELOAD:-}"
+unset LD_PRELOAD
+
 #shellcheck source=../lib.sh
 source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/../lib.sh"
 

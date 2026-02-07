@@ -3,6 +3,12 @@
 
 #shellcheck shell=bash
 set -euo pipefail
+
+# Unset LD_PRELOAD until ready to start the game.
+ORIGINAL_LD_PRELOAD="${LD_PRELOAD:-}"
+unset LD_PRELOAD
+
+# Load the lib functions.
 source "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/../lib.sh"
 
 detect_display_configuration || true
